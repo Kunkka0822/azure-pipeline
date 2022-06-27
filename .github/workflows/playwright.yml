@@ -19,4 +19,4 @@ jobs:
       - name: install latest browsers
         run: npx playwright install 
       - name: run tests
-        run: npx playwright test e2e --reporter=html --config playwright.config.js
+        run: npx playwright test e2e --reporter=html --config playwright.config.ts
