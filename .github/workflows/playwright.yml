@@ -1,40 +1,17 @@
-name: Azure Static Web Apps CI/CD
+name: Automation e2e tests
+concurrency:
+  group: production
 
-on:
-  push:
-    branches: 
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened, closed]
-    branches:
-      - main
+on: workflow_dispatch
 
 jobs:
-
-  build_and_deploy_job:
-
-  test:
-    name: "Test site using Playwright"
-    timeout-minutes: 60
-    needs: build_and_deploy_job
-    runs-on: ubuntu-20.04  
+  run-e2e-tests:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '14.x'
-
-      - name: Install dependencies
-        run: | 
-          cd testing
-          npm ci
-          npx playwright install-deps
-          npx playwright install
-      - name: Run Playwright Tests        
-        continue-on-error: false
-        working-directory: testing       
-        run: |   
-          npx playwright test e2e --reporter=html --config playwright.config.js
-
-
-  close_pull_request_job:
+      - uses: actions/checkout@v1
+      - name: install dependencies
+        run: npm install 
+      - name: install latest browsers
+        run: npx playwright install 
+      - name: run tests
+        run: npx playwright test e2e --reporter=html --config playwright.config.js
